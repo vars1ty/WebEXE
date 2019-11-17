@@ -1,0 +1,5 @@
+C:\Users\Certain\RiderProjects\Loader\Loader\bin\Debug\Loader.pdb
+C:\Users\Certain\RiderProjects\Loader\Loader\obj\Debug\Loader.csprojAssemblyReference.cache
+C:\Users\Certain\RiderProjects\Loader\Loader\obj\Debug\Loader.pdb
+C:\Users\Certain\RiderProjects\Loader\Loader\bin\Debug\Loader.dll
+C:\Users\Certain\RiderProjects\Loader\Loader\obj\Debug\Loader.dll
